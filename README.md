@@ -44,11 +44,35 @@ also, the schematic for the board comes in handy: https://github.com/laris/Solid
 |3|JTAG Programmer|Needed to get one since HID bootloader doesnt seem to work. In fact, I can just flash the firmware through the ISP without needing to re-install a bootloader. Any AVR programmer will do, but I found this one for pretty cheap at Pololu: https://www.pololu.com/product/3172|
 |3| Raspberry Pi| Any will rev 3+ will work for running Klipper
 
-## Replace Parts
+## Goal 1. Replace Parts
 Follow the instructions off the E3D website
 E3D Titan:https://e3d-online.zendesk.com/hc/en-us/sections/6157667943069-Titan
 
 E3D V6: https://e3d-online.zendesk.com/hc/en-us/sections/6157539579037-V6
 
 E3D Compact but powerful Motor: new cables are needed. refer to the datasheet for the wiring: https://e3d-online.zendesk.com/hc/en-us/article_attachments/360016616377 as well as the driver datasheet to wire up the other end.
+
+## Goal 2: Reflash Controller
+1. On Raspberry Pi, install Klipper. I used Kiauh: https://github.com/dw-0/kiauh 
+2. Klipper does have installation in structions on their site https://github.com/Klipper3d/klipper, but let me paraphrase specifically for the Solidoodle 3.
+``` bash
+cd ~/klipper/
+make menuconfig
+```
+
+when the menuconfig opens, select the at90usb1286.
+```
+Micro-controller Architecture (Atmega AVR)
+Processor model (at90usb1286)
+```
+Press Q and Y to Quit and save the configuration
+
+compile the source code:
+```bash
+make
+```
+
+after compiling, the output should specifify the location of the hex file. remember this file as this is the hex file that we will flash to the controller
+
+
 
