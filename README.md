@@ -74,5 +74,34 @@ make
 
 after compiling, the output should specifify the location of the hex file. remember this file as this is the hex file that we will flash to the controller
 
+3. Its now time to reflash the controller. But before doing anything its a good idea to check fuses and back up flash and eeprom. The instructions here are based off using a Pololu USB AVR as I was unfortunately able to get the HID bootloader working.
 
+Check the fuses. fuses should look like this:
+|Fuses|Value|Comments|
+|---|---|---|
+|lfuse|0xDE||
+|hfuse|0x9B or 0xDB|use 0x9B to enable JTAG programming, 0xDB to disable and open up some additional IOs|
+|efuse|0xF0||
+
+If fuses arent set correctly you write it in. Liconmatic's bootloader guide talks about it in detail. Be carefule when setting the fuses as it could brick the device if not done properly.
+
+Backup Flash
+```
+avrdude -c stk500v2 -p at90usb1286 -P /dev/ttyACM1 -U flash:r:firmware.hex:i
+```
+
+Backup EEPROM
+```
+avrdude -c stk500v2 -p at90usb1286 -P /dev/ttyACM1 -U eeprom:r:eeprom.hex:i
+```
+
+Rewrite HID Bootloader (you can choose HID, DFU or CDC on preference. refer to Lincomatic's blog post)
+```
+avrdude -c stk500v2 -p at90usb1286 -P /dev/ttyACM1 -U flash:w:BootloaderHID.hex:i
+```
+
+Flash klipper.elf.hex
+```
+avrdude -c stk500v2 -p at90usb1286 -P /dev/ttyACM1 -U flash:w:klipper.elf.hex:i
+```
 
